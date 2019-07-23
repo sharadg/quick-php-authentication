@@ -1,11 +1,19 @@
 <?php
 session_start();
 
-function http($url, $params=false) {
+function http($url, $params=false, $headers=false) {
   $ch = curl_init($url);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYSTATUS, false);
+  
   if($params)
     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
+
+  if($headers)
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    
   return json_decode(curl_exec($ch));
 }
 
@@ -22,11 +30,14 @@ if(isset($_SESSION['username'])) {
   die();
 }
 
-$client_id = '';
-$client_secret = '';
+$client_id = 'ff684851-98e9-4c1a-b1f7-5182e49d1faf';
+$client_secret = 'a566bed5-0314-40da-9ecf-b6e1b093e070';
 $redirect_uri = 'http://localhost:8080/';
-$metadata_url = 'https://dev-123456.oktapreview.com/oauth2/default/.well-known/oauth-authorization-server';
+$metadata_url = 'https://sso-auth-domain.login.sys.home.pcfdot.com/.well-known/openid-configuration';
 $metadata = http($metadata_url);
+
+#var_dump($_SESSION);
+#var_dump($metadata);
 
 if(isset($_GET['code'])) {
 
@@ -46,18 +57,20 @@ if(isset($_GET['code'])) {
     'client_secret' => $client_secret,
   ]);
 
+#  print_r($response);
+
   if(!isset($response->access_token)) {
     die('Error fetching access token');
   }
 
-  $token = http($metadata->introspection_endpoint, [
-    'token' => $response->access_token,
-    'client_id' => $client_id,
-    'client_secret' => $client_secret,
+  $token = http($metadata->userinfo_endpoint, false, [
+    "Authorization: Bearer ".$response->access_token
   ]);
 
-  if($token->active == 1) {
-    $_SESSION['username'] = $token->username;
+#  print_r($token);
+
+  if($token) {
+    $_SESSION['username'] = $token->email;
     header('Location: /');
     die();
   }
