@@ -1,0 +1,6 @@
+---
+applications:
+- name: cf-php-auth
+  memory: 128M
+  path: .
+  buildpack: php_buildpack
