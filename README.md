@@ -1,4 +1,4 @@
-# Add Authentication to your PHP App in 5 Minutes
+# Add OIDC/OAuth2 Authentication flow to your PHP App to work alongside PCF SSO/UAA
 
 This is a fork of [aaronpk/quick-php-authentication](https://github.com/aaronpk/quick-php-authentication) with few changes to make it work with PCF SSO/UAA.
 
