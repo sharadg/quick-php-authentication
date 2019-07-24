@@ -1,15 +1,12 @@
 # Add Authentication to your PHP App in 5 Minutes
 
-This is a minimalist example PHP app that shows how quickly you can add authentication to an existing application.
+This is a fork of [aaronpk/quick-php-authentication](https://github.com/aaronpk/quick-php-authentication) with few changes to make it work with PCF SSO/UAA.
 
-This is the finished project created from the tutorial [Add Authentication to your PHP App in 5 Minutes](https://developer.okta.com/blog/2018/07/09/five-minute-php-app-auth)
+The file [index.php](index.php) implements an oauth2-client whereas [todo.php](todo.php) serves the purpose of an oauth-resource-server.
 
-You can run this application from the built-in PHP server with the command below:
-
+I have added couple of dependencies that you need to pull in:
+```shell script
+composer require monolog/monolog
+composer require firebase/php-jwt
+composer require league/oauth2-client
 ```
-php -S 127.0.0.1:8080
-```
-
-## License
-
-Apache 2.0, see [LICENSE](LICENSE).
